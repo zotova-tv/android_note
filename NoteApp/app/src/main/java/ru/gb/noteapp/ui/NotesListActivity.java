@@ -111,8 +111,6 @@ public class NotesListActivity extends AppCompatActivity implements NotesAdapter
         {
             case R.id.main_create:
                 Intent intent = new Intent(this, EditNoteActivity.class);
-                Note note = new Note();
-                intent.putExtra(Constants.NOTE, note);
                 editNoteLauncher.launch(intent);
                 return true;
         }
