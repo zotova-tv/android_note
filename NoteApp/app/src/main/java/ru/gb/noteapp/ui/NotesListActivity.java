@@ -1,12 +1,17 @@
 package ru.gb.noteapp.ui;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.LauncherActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -20,9 +25,12 @@ import ru.gb.noteapp.recycler.NotesAdapter;
 public class NotesListActivity extends AppCompatActivity implements NotesAdapter.OnNoteClickListener {
 
     // private Repo repository = new InMemoryRepoImpl();
+    private static final String TAG = "lalala ";
     private Repo repository = InMemoryRepoImpl.getInstance();
     private RecyclerView list;
     private NotesAdapter adapter;
+    private ActivityResultLauncher<Intent> editNoteLauncher;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +50,26 @@ public class NotesListActivity extends AppCompatActivity implements NotesAdapter
         list.setLayoutManager(new LinearLayoutManager(this)); // Vertical
         list.setAdapter(adapter);
 
+        editNoteLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    Intent data = result.getData();
+                    if(data == null || !data.hasExtra(Constants.NOTE) || data.getSerializableExtra(Constants.NOTE) == null) {
+                        return;
+                    }
+                    Note note = (Note) data.getSerializableExtra(Constants.NOTE);
+                    Log.d(TAG, "registerForActivityResult note = [" + note + "]");
+                    if( note.getId() == null ){
+                        // addition
+                        repository.create(note);
+                        adapter.notifyItemInserted(note.getId());
+                    }else{
+                        Log.d(TAG, "updated note = " + note);
+                        repository.update(note);
+                        adapter.notifyItemChanged(note.getId());
+                    }
+                }
+        );
 
     }
 
@@ -68,7 +96,7 @@ public class NotesListActivity extends AppCompatActivity implements NotesAdapter
     public void onNoteClick(Note note) {
         Intent intent = new Intent(this, EditNoteActivity.class);
         intent.putExtra(Constants.NOTE, note);
-        startActivity(intent);
+        editNoteLauncher.launch(intent);
     }
 
     @Override
@@ -82,7 +110,10 @@ public class NotesListActivity extends AppCompatActivity implements NotesAdapter
         switch (item.getItemId())
         {
             case R.id.main_create:
-                // TODO запустить EditNoteActivity
+                Intent intent = new Intent(this, EditNoteActivity.class);
+                Note note = new Note();
+                intent.putExtra(Constants.NOTE, note);
+                editNoteLauncher.launch(intent);
                 return true;
         }
         return super.onOptionsItemSelected(item);

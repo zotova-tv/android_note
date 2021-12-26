@@ -1,10 +1,12 @@
 package ru.gb.noteapp.data;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class InMemoryRepoImpl implements Repo {
-
+    private static final String TAG = "lalala repo";
     private static InMemoryRepoImpl repo;
 
     public static Repo getInstance()
@@ -29,6 +31,7 @@ public class InMemoryRepoImpl implements Repo {
 
     @Override
     public int create(Note note) {
+        Log.d(TAG, "create() called with: note = [" + note + "]");
         int id = counter++;
         note.setId(id);
         notes.add(note);
@@ -47,9 +50,8 @@ public class InMemoryRepoImpl implements Repo {
 
     @Override
     public void update(Note note) {
-        for(int i = 0; i < notes.size(); i++)
-        {
-            if(notes.get(i).getId() == note.getId()) {
+        for(int i = 0; i < notes.size(); i++){
+            if(notes.get(i).getId().equals(note.getId())) {
                 notes.set(i, note);
                 break;
             }
@@ -70,6 +72,7 @@ public class InMemoryRepoImpl implements Repo {
 
     @Override
     public List<Note> getAll() {
+        Log.d(TAG, "getAll() called " + notes);
         return notes;
     }
 }

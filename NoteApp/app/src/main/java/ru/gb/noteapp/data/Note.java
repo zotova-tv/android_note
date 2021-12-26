@@ -7,6 +7,8 @@ public class Note implements Serializable {
     private String title;
     private String description;
 
+    public Note() {}
+
     public Note(String title, String description) {
         this.title = title;
         this.description = description;
@@ -40,5 +42,14 @@ public class Note implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "Note{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
 }
