@@ -42,7 +42,7 @@ public class InMemoryRepoImpl implements Repo {
     public Note read(int id) {
         for(int i = 0; i < notes.size(); i++)
         {
-            if(notes.get(i).getId() == id)
+            if(notes.get(i).getId().equals(id))
                 return notes.get(i);
         }
         return null;
@@ -62,7 +62,7 @@ public class InMemoryRepoImpl implements Repo {
     public void delete(int id) {
         for(int i = 0; i < notes.size(); i++)
         {
-            if(notes.get(i).getId() == id)
+            if(notes.get(i).getId().equals(id))
             {
                 notes.remove(i);
                 break;

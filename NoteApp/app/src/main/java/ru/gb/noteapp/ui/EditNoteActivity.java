@@ -58,12 +58,7 @@ public class EditNoteActivity extends AppCompatActivity {
         note.setDescription(description.getText().toString());
 
         Intent intent = new Intent();
-        if(note.getTitle().equals(Constants.EMPTY_STRING) && !note.getDescription().equals(Constants.EMPTY_STRING)){
-            note.setTitle("New note");
-        }
-        if(!note.getTitle().equals(Constants.EMPTY_STRING)){
-            intent.putExtra(Constants.NOTE, note);
-        }
+        intent.putExtra(Constants.NOTE, note);
 
         setResult(RESULT_OK, intent);
         finish();
