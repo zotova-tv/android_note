@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/grey">
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/note_edit_title_text"
-        tools:text="@string/title"
         android:textSize="@dimen/edit_title_text_size"
+        android:hint="@string/title"
         android:inputType="text" />
 
     <EditText
@@ -18,8 +19,8 @@
         android:layout_height="wrap_content"
         android:lines="@integer/edit_description_lines"
         android:textSize="@dimen/edit_description_text_size"
-        tools:text="Description"
         android:id="@+id/note_edit_description_text"
+        android:hint="@string/description"
         android:inputType="textMultiLine"
         android:gravity="top"/>
 
