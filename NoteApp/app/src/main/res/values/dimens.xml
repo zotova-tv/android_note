@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="edit_title_text_size">24sp</dimen>
+    <dimen name="edit_description_text_size">20sp</dimen>
+    <dimen name="note_item_layout_margin">8dp</dimen>
+    <dimen name="note_item_card_margin">8dp</dimen>
+    <dimen name="note_item_corner_radius">16dp</dimen>
+    <dimen name="note_item_card_elevation">12dp</dimen>
+    <dimen name="title_edit_font_size">24sp</dimen>
+    <dimen name="description_edit_font_size">20sp</dimen>
+</resources>
