@@ -25,7 +25,7 @@ import ru.gb.noteapp.data.Note;
 import ru.gb.noteapp.data.Repo;
 import ru.gb.noteapp.recycler.NotesAdapter;
 
-public class NotesListFragment extends Fragment implements NotesAdapter.OnNoteClickListener, Serializable {
+public class NotesListFragment extends Fragment implements NotesAdapter.OnNoteClickListener {
 
     // private Repo repository = new InMemoryRepoImpl();
     private static final String TAG = "lalala ";
