@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Note implements Serializable {
-    public static String[] IMPORTANCE_CHOICES = {"Low", "Normal", "High"};
+    public static String[] PRIORITY_CHOICES = {"Low", "Normal", "High"};
     private Integer id;
     private String title;
     private String description;

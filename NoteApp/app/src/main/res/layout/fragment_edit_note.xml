@@ -28,7 +28,7 @@
         android:id="@+id/importance_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:entries="@array/importanceChoices" />
+        android:entries="@array/priorityChoices" />
 
     <DatePicker
         android:id="@+id/execute_to_datepicker"

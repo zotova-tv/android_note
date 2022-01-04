@@ -66,8 +66,8 @@ public class EditNoteFragment extends Fragment {
             title.setText(note.getTitle());
             description.setText(note.getDescription());
 
-            for(int i=0; i<Note.IMPORTANCE_CHOICES.length; i++){
-                if(note.getPriority().equals(Note.IMPORTANCE_CHOICES[i])){
+            for(int i = 0; i<Note.PRIORITY_CHOICES.length; i++){
+                if(note.getPriority().equals(Note.PRIORITY_CHOICES[i])){
                     prioritySpinner.setSelection(i, true);
                     break;
                 }
@@ -100,7 +100,6 @@ public class EditNoteFragment extends Fragment {
         }
         Log.d(TAG, "saveNoteClick() called note " + note);
         NotesListFragment parentFragment = (NotesListFragment) getParentFragment();
-        System.out.println("get paretn gragment " + parentFragment);
         parentFragment.updateNotesList(note);
 
         getParentFragmentManager().popBackStack();

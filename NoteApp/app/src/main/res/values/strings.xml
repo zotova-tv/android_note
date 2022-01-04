@@ -6,7 +6,7 @@
     <string name="priority">Priority</string>
     <string name="create">Create</string>
     <string name="settings">Settings</string>
-    <string-array name="importanceChoices">
+    <string-array name="priorityChoices">
         <item>Low</item>
         <item>Normal</item>
         <item>High</item>
