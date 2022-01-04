@@ -36,18 +36,11 @@
             tools:text="Description" />
 
         <TextView
-            android:id="@+id/execute_to"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/importance_text_size"
-            tools:text="03.01.2022" />
-
-        <TextView
             android:id="@+id/note_importance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/importance_text_size"
-            tools:text="Importance" />
+            tools:text="Priority" />
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

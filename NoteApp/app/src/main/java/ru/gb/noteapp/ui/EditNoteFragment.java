@@ -1,6 +1,5 @@
 package ru.gb.noteapp.ui;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,10 +26,9 @@ public class EditNoteFragment extends Fragment {
     private static final String TAG = "lalala ";
     private EditText title;
     private EditText description;
-    private Spinner importanceSpinner;
+    private Spinner prioritySpinner;
     private DatePicker executeToDatePicker;
     private Button saveNote;
-    // private int id = -1;
     private Note note;
 
     public static EditNoteFragment getInstance(Note note){
@@ -55,8 +53,8 @@ public class EditNoteFragment extends Fragment {
         Log.d(TAG, "onViewCreated() called with: view = [" + view + "], savedInstanceState = [" + savedInstanceState + "]");
         title = view.findViewById(R.id.note_edit_title_text);
         description = view.findViewById(R.id.note_edit_description_text);
-        importanceSpinner = view.findViewById(R.id.importance_spinner);
-        importanceSpinner.setSelection(1); // Normal
+        prioritySpinner = view.findViewById(R.id.importance_spinner);
+        prioritySpinner.setSelection(1); // Normal
         executeToDatePicker = view.findViewById(R.id.execute_to_datepicker);
         saveNote = view.findViewById(R.id.edit_note_update);
 
@@ -70,8 +68,7 @@ public class EditNoteFragment extends Fragment {
 
             for(int i=0; i<Note.IMPORTANCE_CHOICES.length; i++){
                 if(note.getPriority().equals(Note.IMPORTANCE_CHOICES[i])){
-                    System.out.println("note.getImportance() == Note.IMPORTANCE_CHOICES[i] " + Note.IMPORTANCE_CHOICES[i]);
-                    importanceSpinner.setSelection(i, true);
+                    prioritySpinner.setSelection(i, true);
                     break;
                 }
             }
@@ -93,12 +90,12 @@ public class EditNoteFragment extends Fragment {
             note = new Note(
                     title.getText().toString(),
                     description.getText().toString(),
-                    importanceSpinner.getSelectedItem().toString(),
+                    prioritySpinner.getSelectedItem().toString(),
                     getDateFromDatePicker(executeToDatePicker));
         }else{
             note.setTitle(title.getText().toString());
             note.setDescription(description.getText().toString());
-            note.setPriority(importanceSpinner.getSelectedItem().toString());
+            note.setPriority(prioritySpinner.getSelectedItem().toString());
             note.setExecuteTo(getDateFromDatePicker(executeToDatePicker));
         }
         Log.d(TAG, "saveNoteClick() called note " + note);
