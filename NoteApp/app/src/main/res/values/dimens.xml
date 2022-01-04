@@ -8,4 +8,5 @@
     <dimen name="note_item_card_elevation">12dp</dimen>
     <dimen name="title_edit_font_size">24sp</dimen>
     <dimen name="description_edit_font_size">20sp</dimen>
+    <dimen name="fragment_holder_width">0dp</dimen>
 </resources>

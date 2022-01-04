@@ -31,7 +31,7 @@ public class InMemoryRepoImpl implements Repo {
 
     @Override
     public int create(Note note) {
-        Log.d(TAG, "create() called with: note = [" + note + "]");
+        // Log.d(TAG, "create() called with: note = [" + note + "]");
         int id = counter++;
         note.setId(id);
         notes.add(note);
