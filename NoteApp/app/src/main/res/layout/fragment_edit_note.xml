@@ -24,6 +24,18 @@
         android:inputType="textMultiLine"
         android:gravity="top"/>
 
+    <Spinner
+        android:id="@+id/importance_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/importanceChoices" />
+
+    <DatePicker
+        android:id="@+id/execute_to_datepicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/execute_to_margin_top"/>
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

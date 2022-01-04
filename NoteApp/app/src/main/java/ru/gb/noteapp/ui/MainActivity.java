@@ -1,25 +1,17 @@
 package ru.gb.noteapp.ui;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import ru.gb.noteapp.R;
-import ru.gb.noteapp.data.Constants;
-import ru.gb.noteapp.data.Note;
 
-public class MainActivity extends AppCompatActivity implements NotesListFragment.NotesListUpdater {
+public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "lalala Main activity";
-    private NotesListFragment notesListFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,43 +19,30 @@ public class MainActivity extends AppCompatActivity implements NotesListFragment
         Log.d(TAG, "onCreate() called with: savedInstanceState = [" + savedInstanceState + "]");
         setContentView(R.layout.activity_main);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        notesListFragment = (NotesListFragment) fragmentManager.findFragmentById(R.id.fragment_notes_list_holder);
-
-        if(notesListFragment == null){
-            notesListFragment = new NotesListFragment();
-            fragmentManager
+        if(savedInstanceState == null){
+            getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.fragment_notes_list_holder, notesListFragment)
+                    .add(R.id.main_fragment_holder, new NotesListFragment())
                     .commit();
         }
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        Log.d(TAG, "onOptionsItemSelected() called with: item = [" + item.getItemId() + "]");
-        switch (item.getItemId())
+    public void onBackPressed() {
+        for(Fragment f: getSupportFragmentManager().getFragments())
         {
-            case R.id.main_create:
-                Log.d(TAG, "create EditNoteFragment()");
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragment_edit_note_holder, new EditNoteFragment())
-                        .addToBackStack(null)
-                        .commit();
-                return true;
+            if(f.isVisible())
+            {
+                FragmentManager childFm = f.getChildFragmentManager();
+                if(childFm.getBackStackEntryCount() > 0)
+                {
+                    childFm.popBackStack();
+                    return;
+                }
+            }
         }
-        return super.onOptionsItemSelected(item);
+
+        super.onBackPressed();
     }
 
-    @Override
-    public void updateNotesList(Note note) {
-        notesListFragment.updateNotesList(note);
-    }
 }

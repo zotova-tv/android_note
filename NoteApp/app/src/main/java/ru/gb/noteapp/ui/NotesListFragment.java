@@ -1,6 +1,5 @@
 package ru.gb.noteapp.ui;
 
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -8,18 +7,17 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.io.Serializable;
-
 import ru.gb.noteapp.R;
-import ru.gb.noteapp.data.Constants;
 import ru.gb.noteapp.data.InMemoryRepoImpl;
 import ru.gb.noteapp.data.Note;
 import ru.gb.noteapp.data.Repo;
@@ -37,6 +35,7 @@ public class NotesListFragment extends Fragment implements NotesAdapter.OnNoteCl
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_notes_list, container, false);
     }
 
@@ -80,10 +79,40 @@ public class NotesListFragment extends Fragment implements NotesAdapter.OnNoteCl
     }
 
     @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.notes_list_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Log.d(TAG, "onOptionsItemSelected() called with: item = [" + item.getItemId() + "]");
+        Fragment fragment;
+        switch (item.getItemId())
+        {
+            case R.id.main_settings:
+                Log.d(TAG, "create SettingsFragment()");
+                getParentFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.main_fragment_holder, new SettingsFragment())
+                        .addToBackStack(null)
+                        .commit();
+                break;
+            default:
+                getChildFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_edit_note_holder, new EditNoteFragment())
+                        .addToBackStack(null)
+                        .commit();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onNoteClick(Note note) {
         Log.d(TAG, "onNoteClick() called with: note = [" + note + "]");
 
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentManager fragmentManager = getChildFragmentManager();
         EditNoteFragment activeFragment = (EditNoteFragment) fragmentManager.findFragmentById(R.id.fragment_edit_note_holder);
 
         if(activeFragment != null){
@@ -96,10 +125,6 @@ public class NotesListFragment extends Fragment implements NotesAdapter.OnNoteCl
                 .replace(R.id.fragment_edit_note_holder, EditNoteFragment.getInstance(note))
                 .addToBackStack(null)
                 .commit();
-    }
-
-    public interface NotesListUpdater {
-        void updateNotesList(Note note);
     }
 
     public void updateNotesList(Note note){
