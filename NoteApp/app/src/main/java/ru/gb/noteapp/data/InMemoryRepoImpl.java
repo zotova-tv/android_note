@@ -76,4 +76,8 @@ public class InMemoryRepoImpl implements Repo {
         Log.d(TAG, "getAll() called " + notes);
         return notes;
     }
+
+    public int getSize(){
+        return notes.size();
+    }
 }

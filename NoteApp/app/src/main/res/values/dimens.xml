@@ -11,4 +11,5 @@
     <dimen name="fragment_holder_width">0dp</dimen>
     <dimen name="importance_text_size">15sp</dimen>
     <dimen name="execute_to_margin_top">15dp</dimen>
+    <dimen name="context_menu_width">30dp</dimen>
 </resources>

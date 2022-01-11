@@ -30,12 +30,14 @@ public class EditNoteFragment extends Fragment {
     private DatePicker executeToDatePicker;
     private Button saveNote;
     private Note note;
+    private int position;
 
-    public static EditNoteFragment getInstance(Note note){
+    public static EditNoteFragment getInstance(Note note, int position){
         EditNoteFragment fragment = new EditNoteFragment();
 
         Bundle args = new Bundle();
         args.putSerializable(Constants.NOTE, note);
+        args.putInt(Constants.POSITION, position);
         fragment.setArguments(args);
 
         return fragment;
@@ -62,6 +64,7 @@ public class EditNoteFragment extends Fragment {
         Bundle args = getArguments();
         if(args != null && args.containsKey(Constants.NOTE)){
             note = (Note) args.getSerializable(Constants.NOTE);
+            position = args.getInt(Constants.POSITION);
             Log.d(TAG, "EditNoteFragment onViewCreated() called with: " + note);
             title.setText(note.getTitle());
             description.setText(note.getDescription());
@@ -100,7 +103,7 @@ public class EditNoteFragment extends Fragment {
         }
         Log.d(TAG, "saveNoteClick() called note " + note);
         NotesListFragment parentFragment = (NotesListFragment) getParentFragment();
-        parentFragment.updateNotesList(note);
+        parentFragment.updateNotesList(note, position);
 
         getParentFragmentManager().popBackStack();
 

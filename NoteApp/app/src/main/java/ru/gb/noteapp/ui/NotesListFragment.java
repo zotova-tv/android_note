@@ -7,7 +7,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,15 +21,15 @@ import ru.gb.noteapp.data.InMemoryRepoImpl;
 import ru.gb.noteapp.data.Note;
 import ru.gb.noteapp.data.Repo;
 import ru.gb.noteapp.recycler.NotesAdapter;
+import ru.gb.noteapp.recycler.PopupMenuItemClickListener;
 
-public class NotesListFragment extends Fragment implements NotesAdapter.OnNoteClickListener {
+public class NotesListFragment extends Fragment implements PopupMenuItemClickListener {
 
     // private Repo repository = new InMemoryRepoImpl();
     private static final String TAG = "lalala ";
     private Repo repository = InMemoryRepoImpl.getInstance();
     private RecyclerView list;
     private NotesAdapter adapter;
-    private Context controller;
 
     @Nullable
     @Override
@@ -51,7 +50,7 @@ public class NotesListFragment extends Fragment implements NotesAdapter.OnNoteCl
         adapter = new NotesAdapter();
         adapter.setNotes(repository.getAll());
 
-        adapter.setOnNoteClickListener(this);
+        adapter.setOnPopupMenuItemClickListener(this);
 
         list = view.findViewById(R.id.list);
         // list.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -108,34 +107,42 @@ public class NotesListFragment extends Fragment implements NotesAdapter.OnNoteCl
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onNoteClick(Note note) {
-        Log.d(TAG, "onNoteClick() called with: note = [" + note + "]");
-
-        FragmentManager fragmentManager = getChildFragmentManager();
-        EditNoteFragment activeFragment = (EditNoteFragment) fragmentManager.findFragmentById(R.id.fragment_edit_note_holder);
-
-        if(activeFragment != null){
-            fragmentManager.beginTransaction()
-                    .detach(activeFragment)
-                    .commit();
-        }
-        fragmentManager
-                .beginTransaction()
-                .replace(R.id.fragment_edit_note_holder, EditNoteFragment.getInstance(note))
-                .addToBackStack(null)
-                .commit();
-    }
-
-    public void updateNotesList(Note note){
+    public void updateNotesList(Note note, int position){
         if( note.getId() == null ){
             // addition
             repository.create(note);
-            adapter.notifyItemInserted(note.getId());
+            adapter.notifyItemInserted(repository.getAll().size());
         }else{
             Log.d(TAG, "updated note = " + note);
             repository.update(note);
-            adapter.notifyItemChanged(note.getId());
+            adapter.notifyItemChanged(position);
+        }
+    }
+
+    @Override
+    public void click(int command, Note note, int position) {
+        switch (command)
+        {
+            case R.id.actions_delete:
+                repository.delete(note.getId());
+                adapter.notifyItemRemoved(position);
+                return;
+
+            case R.id.actions_modify:
+                FragmentManager fragmentManager = getChildFragmentManager();
+                EditNoteFragment activeFragment = (EditNoteFragment) fragmentManager.findFragmentById(R.id.fragment_edit_note_holder);
+
+                if(activeFragment != null){
+                    fragmentManager.beginTransaction()
+                            .detach(activeFragment)
+                            .commit();
+                }
+                fragmentManager
+                        .beginTransaction()
+                        .replace(R.id.fragment_edit_note_holder, EditNoteFragment.getInstance(note, position))
+                        .addToBackStack(null)
+                        .commit();
+                return;
         }
     }
 }
