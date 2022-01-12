@@ -118,9 +118,6 @@ public class EditNoteFragment extends Fragment {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
             Log.d(TAG, "onDateSet() called with: view = [" + view + "], year = [" + year + "], month = [" + month + "], dayOfMonth = [" + dayOfMonth + "]");
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(year, month, dayOfMonth);
-            Date newDate = calendar.getTime();
             executeToDate.setText(String.format("%02d-%02d-%d", dayOfMonth, (month + 1), year));
         }
     };
