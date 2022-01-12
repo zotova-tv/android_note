@@ -34,5 +34,13 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/description_edit_font_size"
             tools:text="Description" />
+
+        <TextView
+            android:id="@+id/note_importance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/importance_text_size"
+            tools:text="Priority" />
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>

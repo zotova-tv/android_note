@@ -31,7 +31,7 @@ public class InMemoryRepoImpl implements Repo {
 
     @Override
     public int create(Note note) {
-        // Log.d(TAG, "create() called with: note = [" + note + "]");
+        Log.d(TAG, "create() called with: note = [" + note + "]");
         int id = counter++;
         note.setId(id);
         notes.add(note);
@@ -50,6 +50,7 @@ public class InMemoryRepoImpl implements Repo {
 
     @Override
     public void update(Note note) {
+        Log.d(TAG, "update() called with: note = [" + note + "]");
         for(int i = 0; i < notes.size(); i++){
             if(notes.get(i).getId().equals(note.getId())) {
                 notes.set(i, note);
