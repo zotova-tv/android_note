@@ -8,5 +8,6 @@ public interface Constants {
     public static final String EMPTY_STRING = "";
     public static final String WHITESPACE_STRING = " ";
     public static final String POSITION = "POSITION";
+    public static final String DASH = "-";
 
 }
