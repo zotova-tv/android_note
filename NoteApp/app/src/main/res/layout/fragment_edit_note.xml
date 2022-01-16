@@ -30,11 +30,36 @@
         android:layout_height="wrap_content"
         android:entries="@array/priorityChoices" />
 
-    <DatePicker
-        android:id="@+id/execute_to_datepicker"
-        android:layout_width="wrap_content"
+<!--    <DatePicker-->
+<!--        android:id="@+id/execute_to_datepicker"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="@dimen/execute_to_margin_top"/>-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/execute_to_margin_top"/>
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/execute_to_margin"
+        android:layout_marginBottom="@dimen/execute_to_margin">
+
+        <EditText
+            android:id="@+id/execute_to_date"
+            android:layout_width="@dimen/layout_width_0"
+            android:layout_weight="5"
+            android:layout_height="wrap_content"
+            android:textIsSelectable="true"
+            android:inputType="date"
+            android:hint="@string/execute_to_format"
+            />
+        <ImageButton
+            android:id="@+id/show_datepicker_dialog"
+            android:layout_width="@dimen/layout_width_0"
+            android:layout_weight="1"
+            android:layout_height="@dimen/show_datepicker_dialog_height"
+            android:backgroundTint="@color/grey"
+            android:src="@drawable/ic_baseline_calendar_month_24"/>
+    </LinearLayout>
 
     <Button
         android:layout_width="match_parent"
