@@ -1,15 +1,17 @@
 package ru.gb.noteapp.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
 
 import ru.gb.noteapp.R;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CallerSuperActivityMethods {
 
     public static final String TAG = "lalala Main activity";
 
@@ -29,19 +31,22 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        for(Fragment f: getSupportFragmentManager().getFragments())
-        {
-            if(f.isVisible())
-            {
+        for(Fragment f: getSupportFragmentManager().getFragments()){
+            if(f.isVisible()){
                 FragmentManager childFm = f.getChildFragmentManager();
-                if(childFm.getBackStackEntryCount() > 0)
-                {
+                if(childFm.getBackStackEntryCount() > 0){
                     childFm.popBackStack();
                     return;
+                }else{
+                    new ConfirmExitDialogFragment().show(getSupportFragmentManager(), null);
                 }
             }
         }
 
+//        super.onBackPressed();
+    }
+
+    public void callSuperOnBackPressed(){
         super.onBackPressed();
     }
 
