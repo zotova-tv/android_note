@@ -6,13 +6,11 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -20,12 +18,20 @@ import ru.gb.noteapp.R;
 import ru.gb.noteapp.data.Constants;
 import ru.gb.noteapp.databinding.ActivityMainDrawerBinding;
 
-public class MainActivity extends AppCompatActivity implements CallerSuperActivityMethods, NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements
+        CallerSuperActivityMethods,
+        NavigationView.OnNavigationItemSelectedListener,
+        NotesListFragment.ToggleDrawerLayout,
+        MainFragmentsController {
 
     public static final String TAG = "lalala Main activity";
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainDrawerBinding binding;
     private NotesListFragment notesListFragment;
+    private SettingsFragment settingsFragment;
+    private AboutAppFragment aboutAppFragment;
+    private NavigationView navigationView;
+    private DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,37 +39,31 @@ public class MainActivity extends AppCompatActivity implements CallerSuperActivi
         Log.d(TAG, "onCreate() called with: savedInstanceState = [" + savedInstanceState + "]");
         binding = ActivityMainDrawerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        // DrawerLayout drawer = binding.drawerLayout;
+        drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
         navigationView.setNavigationItemSelectedListener(this);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
-                .setOpenableLayout(drawer)
-                .build();
-//        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-//        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-//        NavigationUI.setupWithNavController(navigationView, navController);
 
-        if(savedInstanceState == null){
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24);// set drawable icon
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        if (savedInstanceState == null) {
             notesListFragment = new NotesListFragment();
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.main_fragment_holder, notesListFragment, Constants.NOTES_LIST_TAG)
+                    .add(R.id.main_fragment_holder, notesListFragment, Constants.NOTES_LIST_FRAGMENT_TAG)
                     .commit();
         }
     }
 
     @Override
     public void onBackPressed() {
-        for(Fragment f: getSupportFragmentManager().getFragments()){
-            if(f.isVisible()){
+        for (Fragment f : getSupportFragmentManager().getFragments()) {
+            if (f.isVisible()) {
                 FragmentManager childFm = f.getChildFragmentManager();
-                if(childFm.getBackStackEntryCount() > 0) {
+                if (childFm.getBackStackEntryCount() > 0) {
                     childFm.popBackStack();
                     return;
-                }else if(f.equals(notesListFragment)){
+                } else if (f.equals(notesListFragment)) {
                     new ConfirmExitDialogFragment().show(getSupportFragmentManager(), null);
                     return;
                 }
@@ -73,10 +73,9 @@ public class MainActivity extends AppCompatActivity implements CallerSuperActivi
         super.onBackPressed();
     }
 
-    public void callSuperOnBackPressed(){
+    public void callSuperOnBackPressed() {
         super.onBackPressed();
     }
-
 
 
 //    @Override
@@ -87,24 +86,70 @@ public class MainActivity extends AppCompatActivity implements CallerSuperActivi
 //    }
 
     @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
-                || super.onSupportNavigateUp();
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        Log.d(TAG, "onNavigationItemSelected() called with: item = [" + item + " " + item.getTitle() + "]");
+        // R.id.nav_home
+        switch (item.getItemId()) {
+
+            case R.id.nav_home: {
+                closeAllFragments();
+                break;
+            }
+            case R.id.nav_about_app: {
+                addAboutAppFragment();
+                break;
+            }
+        }
+        //close navigation drawer
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
-//        switch (item.getItemId()) {
-//
-//            case R.id.nav_maths: {
-//                //do somthing
-//                break;
-//            }
-//        }
-//        //close navigation drawer
-//        mDrawerLayout.closeDrawer(GravityCompat.START);
-        return true;
+    public void toggleDrawerLayout() {
+        if (drawer.isOpen()) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            drawer.openDrawer(GravityCompat.START);
+        }
+    }
+
+    public void closeAllFragments() {
+        for (Fragment f : getSupportFragmentManager().getFragments()) {
+            FragmentManager childFm = f.getChildFragmentManager();
+            if (childFm.getBackStackEntryCount() > 0) {
+                childFm.popBackStack();
+            }
+            if (settingsFragment != null) {
+                getSupportFragmentManager().popBackStack(Constants.SETTINGS_FRAGMENT_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            }
+            if (aboutAppFragment != null) {
+                getSupportFragmentManager().popBackStack(Constants.ABOUT_APP_FRAGMENT_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            }
+        }
+    }
+
+    @Override
+    public void addSettingsFragment() {
+        if(settingsFragment == null) {
+            settingsFragment = new SettingsFragment();
+        }
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.main_fragment_holder,settingsFragment, Constants.SETTINGS_FRAGMENT_TAG)
+                .addToBackStack(Constants.SETTINGS_FRAGMENT_TAG)
+                .commit();
+    }
+
+    @Override
+    public void addAboutAppFragment() {
+        if(aboutAppFragment == null) {
+            aboutAppFragment = new AboutAppFragment();
+        }
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.main_fragment_holder, aboutAppFragment, Constants.ABOUT_APP_FRAGMENT_TAG)
+                .addToBackStack(Constants.ABOUT_APP_FRAGMENT_TAG)
+                .commit();
     }
 }
