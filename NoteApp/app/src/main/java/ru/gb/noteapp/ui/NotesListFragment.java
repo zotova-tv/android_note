@@ -97,12 +97,17 @@ public class NotesListFragment extends Fragment implements PopupMenuItemClickLis
                         .addToBackStack(null)
                         .commit();
                 break;
-            default:
+            case R.id.main_create:
+                Log.d(TAG, "create SettingsFragment()");
                 getChildFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fragment_edit_note_holder, new EditNoteFragment())
                         .addToBackStack(null)
                         .commit();
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+
         }
         return super.onOptionsItemSelected(item);
     }
