@@ -46,6 +46,9 @@ public class MainActivity extends AppCompatActivity implements
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24);// set drawable icon
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        settingsFragment = (SettingsFragment) getSupportFragmentManager().findFragmentByTag(Constants.SETTINGS_FRAGMENT_TAG);
+        aboutAppFragment = (AboutAppFragment) getSupportFragmentManager().findFragmentByTag(Constants.ABOUT_APP_FRAGMENT_TAG);
+
         if (savedInstanceState == null) {
             notesListFragment = new NotesListFragment();
             getSupportFragmentManager()
