@@ -9,7 +9,7 @@ public interface Constants {
     public static final String WHITESPACE_STRING = " ";
     public static final String POSITION = "POSITION";
     public static final String DASH = "-";
-    public static final String NOTES_LIST_FRAGMENT_TAG = "NOTES_LIST_TAG";
+    public static final String NOTES_LIST_FRAGMENT_TAG = "NOTES_LIST_FRAGMENT_TAG";
     public static final String SETTINGS_FRAGMENT_TAG = "SETTINGS_FRAGMENT_TAG";
     public static final String ABOUT_APP_FRAGMENT_TAG = "ABOUT_APP_FRAGMENT_TAG";
 }
