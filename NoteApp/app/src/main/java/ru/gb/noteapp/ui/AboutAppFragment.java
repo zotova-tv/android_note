@@ -28,14 +28,10 @@ public class AboutAppFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         Log.d(TAG, "onOptionsItemSelected() called with: item = [" + item.getItemId() + " " + item.getTitle() + "]");
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case android.R.id.home:
-                ((NotesListFragment.ToggleDrawerLayout) requireActivity()).toggleDrawerLayout();
+                ((ToggleDrawerLayout) requireActivity()).toggleDrawerLayout();
                 break;
-            default:
-                return super.onOptionsItemSelected(item);
-
         }
         return super.onOptionsItemSelected(item);
     }

@@ -21,7 +21,7 @@ import ru.gb.noteapp.databinding.ActivityMainDrawerBinding;
 public class MainActivity extends AppCompatActivity implements
         CallerSuperActivityMethods,
         NavigationView.OnNavigationItemSelectedListener,
-        NotesListFragment.ToggleDrawerLayout,
+        ToggleDrawerLayout,
         MainFragmentsController {
 
     public static final String TAG = "lalala Main activity";
