@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,6 +31,13 @@ public class NotesListFragment extends Fragment implements PopupMenuItemClickLis
     private Repo repository = InMemoryRepoImpl.getInstance();
     private RecyclerView list;
     private NotesAdapter adapter;
+    private MainFragmentsController mainFragmentsController;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        mainFragmentsController = (MainFragmentsController) context;
+        super.onAttach(context);
+    }
 
     @Nullable
     @Override
@@ -43,7 +51,7 @@ public class NotesListFragment extends Fragment implements PopupMenuItemClickLis
         Log.d(TAG, "onViewCreated() called with: view = [" + view + "], savedInstanceState = [" + savedInstanceState + "]");
         super.onViewCreated(view, savedInstanceState);
 
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
             fillRepo();
         }
 
@@ -85,34 +93,37 @@ public class NotesListFragment extends Fragment implements PopupMenuItemClickLis
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        Log.d(TAG, "onOptionsItemSelected() called with: item = [" + item.getItemId() + "]");
+        Log.d(TAG, "onOptionsItemSelected() called with: item = [" + item.getItemId() + " " + item.getTitle() + "]");
         Fragment fragment;
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case R.id.main_settings:
                 Log.d(TAG, "create SettingsFragment()");
-                getParentFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.main_fragment_holder, new SettingsFragment())
-                        .addToBackStack(null)
-                        .commit();
+                mainFragmentsController.addSettingsFragment();
                 break;
-            default:
+            case R.id.main_create:
+                Log.d(TAG, "create EditNoteFragment()");
                 getChildFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fragment_edit_note_holder, new EditNoteFragment())
                         .addToBackStack(null)
                         .commit();
+                break;
+            case android.R.id.home:
+                ((ToggleDrawerLayout) requireActivity()).toggleDrawerLayout();
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public void updateNotesList(Note note, int position){
-        if( note.getId() == null ){
+    public void updateNotesList(Note note, int position) {
+        if (note.getId() == null) {
             // addition
             repository.create(note);
             adapter.notifyItemInserted(repository.getAll().size());
-        }else{
+        } else {
             Log.d(TAG, "updated note = " + note);
             repository.update(note);
             adapter.notifyItemChanged(position);
@@ -121,8 +132,7 @@ public class NotesListFragment extends Fragment implements PopupMenuItemClickLis
 
     @Override
     public void click(int command, Note note, int position) {
-        switch (command)
-        {
+        switch (command) {
             case R.id.actions_delete:
                 repository.delete(note.getId());
                 adapter.notifyItemRemoved(position);
@@ -132,7 +142,7 @@ public class NotesListFragment extends Fragment implements PopupMenuItemClickLis
                 FragmentManager fragmentManager = getChildFragmentManager();
                 EditNoteFragment activeFragment = (EditNoteFragment) fragmentManager.findFragmentById(R.id.fragment_edit_note_holder);
 
-                if(activeFragment != null){
+                if (activeFragment != null) {
                     fragmentManager.beginTransaction()
                             .detach(activeFragment)
                             .commit();
@@ -145,4 +155,6 @@ public class NotesListFragment extends Fragment implements PopupMenuItemClickLis
                 return;
         }
     }
+
+
 }
