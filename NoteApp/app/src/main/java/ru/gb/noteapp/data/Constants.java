@@ -12,4 +12,5 @@ public interface Constants {
     public static final String NOTES_LIST_FRAGMENT_TAG = "NOTES_LIST_FRAGMENT_TAG";
     public static final String SETTINGS_FRAGMENT_TAG = "SETTINGS_FRAGMENT_TAG";
     public static final String ABOUT_APP_FRAGMENT_TAG = "ABOUT_APP_FRAGMENT_TAG";
+    public static final String NOTES_LIST_KEY = "NOTES_LIST_KEY";
 }

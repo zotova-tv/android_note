@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,8 +17,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 import ru.gb.noteapp.R;
+import ru.gb.noteapp.data.Constants;
 import ru.gb.noteapp.data.InMemoryRepoImpl;
 import ru.gb.noteapp.data.Note;
 import ru.gb.noteapp.data.Repo;
@@ -32,6 +42,7 @@ public class NotesListFragment extends Fragment implements PopupMenuItemClickLis
     private RecyclerView list;
     private NotesAdapter adapter;
     private MainFragmentsController mainFragmentsController;
+    private SharedPreferences prefs;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -51,6 +62,8 @@ public class NotesListFragment extends Fragment implements PopupMenuItemClickLis
         Log.d(TAG, "onViewCreated() called with: view = [" + view + "], savedInstanceState = [" + savedInstanceState + "]");
         super.onViewCreated(view, savedInstanceState);
 
+        prefs = getActivity().getPreferences(Context.MODE_PRIVATE);
+
         if (savedInstanceState == null) {
             fillRepo();
         }
@@ -67,22 +80,40 @@ public class NotesListFragment extends Fragment implements PopupMenuItemClickLis
     }
 
     private void fillRepo() {
-        repository.create(new Note("Title 1", "Description 1"));
-        repository.create(new Note("Title 2", "Description 2"));
-        repository.create(new Note("Title 3", "Description 3"));
-        repository.create(new Note("Title 4", "Description 4"));
-        repository.create(new Note("Title 5", "Description 5"));
-        repository.create(new Note("Title 6", "Description 6"));
-        repository.create(new Note("Title 7", "Description 7"));
-        repository.create(new Note("Title 8", "Description 8"));
-        repository.create(new Note("Title 9", "Description 9"));
-        repository.create(new Note("Title 10", "Description 10"));
-        repository.create(new Note("Title 11", "Description 11"));
-        repository.create(new Note("Title 12", "Description 12"));
-        repository.create(new Note("Title 13", "Description 13"));
-        repository.create(new Note("Title 14", "Description 14"));
-        repository.create(new Note("Title 15", "Description 15"));
-        repository.create(new Note("Title 16", "Description 16"));
+//        repository.create(new Note("Title 1", "Description 1"));
+//        repository.create(new Note("Title 2", "Description 2"));
+//        repository.create(new Note("Title 3", "Description 3"));
+//        repository.create(new Note("Title 4", "Description 4"));
+//        repository.create(new Note("Title 5", "Description 5"));
+//        repository.create(new Note("Title 6", "Description 6"));
+//        repository.create(new Note("Title 7", "Description 7"));
+//        repository.create(new Note("Title 8", "Description 8"));
+//        repository.create(new Note("Title 9", "Description 9"));
+//        repository.create(new Note("Title 10", "Description 10"));
+//        repository.create(new Note("Title 11", "Description 11"));
+//        repository.create(new Note("Title 12", "Description 12"));
+//        repository.create(new Note("Title 13", "Description 13"));
+//        repository.create(new Note("Title 14", "Description 14"));
+//        repository.create(new Note("Title 15", "Description 15"));
+//        repository.create(new Note("Title 16", "Description 16"));
+
+        String savedNotes = prefs.getString(Constants.NOTES_LIST_KEY, null);
+        ArrayList<Note> notes = new ArrayList<>();
+        if (savedNotes == null || savedNotes.isEmpty()) {
+            Toast.makeText(getActivity(), "Empty", Toast.LENGTH_SHORT).show();
+        } else {
+            try {
+                Type type = new TypeToken<ArrayList<Note>>() {
+                }.getType();
+                // adapter.setNotes(new GsonBuilder().create().fromJson(savedNotes, type));
+                notes = new GsonBuilder().create().fromJson(savedNotes, type);
+            } catch (JsonSyntaxException e) {
+                Toast.makeText(getActivity(), "Ошибка трансформации", Toast.LENGTH_SHORT).show();
+            }
+        }
+        for(Note note: notes){
+            repository.create(note);
+        }
     }
 
     @Override
@@ -128,6 +159,7 @@ public class NotesListFragment extends Fragment implements PopupMenuItemClickLis
             repository.update(note);
             adapter.notifyItemChanged(position);
         }
+        updateSharedPreferences();
     }
 
     @Override
@@ -136,6 +168,7 @@ public class NotesListFragment extends Fragment implements PopupMenuItemClickLis
             case R.id.actions_delete:
                 repository.delete(note.getId());
                 adapter.notifyItemRemoved(position);
+                updateSharedPreferences();
                 return;
 
             case R.id.actions_modify:
@@ -156,5 +189,8 @@ public class NotesListFragment extends Fragment implements PopupMenuItemClickLis
         }
     }
 
-
+    private void updateSharedPreferences(){
+        String jsonNotes = new GsonBuilder().create().toJson(repository.getAll());
+        prefs.edit().putString(Constants.NOTES_LIST_KEY, jsonNotes).apply();
+    }
 }

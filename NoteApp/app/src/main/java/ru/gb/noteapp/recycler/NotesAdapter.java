@@ -20,7 +20,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NoteHolder> {
 
     public void setNotes(List<Note> notes){
         this.notes = notes;
-        // notifyDataSetChanged();
+        notifyDataSetChanged();
     }
 
 
@@ -30,8 +30,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NoteHolder> {
     {
         this.listener = listener;
     }
-
-
 
     @NonNull
     @Override
