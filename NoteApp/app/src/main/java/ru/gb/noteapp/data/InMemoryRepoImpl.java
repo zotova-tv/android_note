@@ -1,6 +1,9 @@
 package ru.gb.noteapp.data;
 
+import android.content.SharedPreferences;
 import android.util.Log;
+
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,11 +11,12 @@ import java.util.List;
 public class InMemoryRepoImpl implements Repo {
     private static final String TAG = "lalala repo";
     private static InMemoryRepoImpl repo;
+    private Gson gson = new Gson();
+    private SharedPreferences prefs;
 
     public static Repo getInstance()
     {
-        if(repo == null)
-        {
+        if(repo == null){
             repo = new InMemoryRepoImpl();
         }
         return repo;
